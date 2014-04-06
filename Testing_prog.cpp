@@ -155,19 +155,17 @@ void main(){
 	fin >> N;
 
 	A = new double *[N];
-	B = new double *[N];
+	B = new double *[N];//	AX=B
 	X = new double *[N];
-	Xapr = new double *[N];
-	R = new double *[N];
-	Z = new double *[N];
-	E = new double *[N];
-	Arev = new double *[N];
+	Xapr = new double *[N];//	X aproximated solution
+	R = new double *[N];//	discrepancy
+	Z = new double *[N];//	inaccuracy
+	Arev = new double *[N];//	A^-1 aproximated
 
 	for (i = 0; i < N; i++){
 		A[i] = new double[N];
 		R[i] = new double[1];
 		Z[i] = new double[1];
-		E[i] = new double[N];
 		Arev[i] = new double[N];
 		B[i] = new double[1];
 		X[i] = new double[1];
@@ -199,7 +197,7 @@ void main(){
 	cout << "B = " << '\n';
 	matrix_output(B, N, 1);
 
-	findRev(Arev, N);// A теперь приближенное значение обратной матрицы
+	findRev(Arev, N);	//	Approximated reverted matrix
 	cout << "A reversed = " << '\n';
 	matrix_output(Arev, N, N);
 	Xapr = multiplicate(Arev, B, N, N, N);
@@ -207,20 +205,20 @@ void main(){
 	matrix_output(Xapr, N, 1);
 	cout << "X norm = " << matrix_norm(X, N) << '\n';
 
-	Z = Add(Xapr, X, N, 1, true);
+	Z = Add(Xapr, X, N, 1, true);	//	Z = X - Xapr
 	cout << "Z = " << '\n';
 	matrix_output(Z, N, 1);
 	ksi = matrix_norm(Z, N);
-	ksi /= matrix_norm(X, N);
+	ksi /= matrix_norm(X, N);	//	ksi = ||X||/||(X - Xapr)||
 	cout << "Z norm = " << matrix_norm(Z, N) << '\n';
 	cout << "Ksi = " << ksi << '\n';
 
-	R = multiplicate(A, Xapr, N, N, 1);
-	R = Add(R, B, N, 1, true);
+	R = multiplicate(A, Xapr, N, N, 1);	
+	R = Add(R, B, N, 1, true);	// R = A * Xapr - B
 	cout << "R = " << '\n';
 	matrix_output(R, N, 1);
 	ro = matrix_norm(R, N);
-	ro /= matrix_norm(B, N);
+	ro /= matrix_norm(B, N);	// ro = ||A * Xapr - B||/||B||
 	cout << "R norm = " << matrix_norm(R, N) << '\n';
 	cout << "B norm = " << matrix_norm(B, N) << '\n';
 	cout << "Ro = " << ro << '\n';
@@ -231,12 +229,10 @@ void main(){
 		delete [] A[i];
 		delete[] R[i];
 		delete[] Z[i];
-		delete[] E[i];
 		delete[] Arev[i];
 	}
 	delete[] A;
 	delete[] R;
 	delete[] Z;
-	delete[] E;
 	delete[] Arev;
 }
